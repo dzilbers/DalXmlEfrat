@@ -1,5 +1,4 @@
-﻿
-Test_Student_LinqToXml();
+﻿Test_Student_LinqToXml();
 Test_Lecturer_XmlSerializer();
 
 static void Test_Student_LinqToXml()
@@ -63,5 +62,5 @@ static void Test_Lecturer_XmlSerializer()
 
         foreach (var item in dal.GetAll()) Console.WriteLine(item);
     }
-    catch (Exception ex) { Console.WriteLine(ex.Message); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
 }

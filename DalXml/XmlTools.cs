@@ -1,4 +1,5 @@
 ﻿namespace Dal;
+
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -10,6 +11,20 @@ static class XMLTools
         if (!Directory.Exists(s_dir))
             Directory.CreateDirectory(s_dir);
     }
+
+    #region Extension Fuctions
+    public static T? ToEnumNullable<T>(this XElement element, string name) where T : struct, Enum =>
+        Enum.TryParse<T>((string?)element.Element(name), out var result) ? (T?)result : null;
+
+    public static DateTime? ToDateTimeNullable(this XElement element, string name) =>
+        DateTime.TryParse((string?)element.Element(name), out var result) ? (DateTime?)result : null;
+
+    public static double? ToDoubleNullable(this XElement element, string name) =>
+        double.TryParse((string?)element.Element(name), out var result) ? (double?)result : null;
+
+    public static int? ToIntNullable(this XElement element, string name) =>
+        int.TryParse((string?)element.Element(name), out var result) ? (int?)result : null;
+    #endregion
 
     #region SaveLoadWithXElement
     public static void SaveListToXMLElement(XElement rootElem, string entity)
@@ -46,13 +61,13 @@ static class XMLTools
     #endregion
 
     #region SaveLoadWithXMLSerializer
-    public static void SaveListToXMLSerializer<T>(List<T?> list, string entity)
+    public static void SaveListToXMLSerializer<T>(List<T?> list, string entity) where T : struct
     {
         string filePath = $"{s_dir + entity}.xml";
         try
         {
             using FileStream file = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-            XmlSerializer x = new(list.GetType());
+            XmlSerializer x = new(typeof(List<T?>));
             //XmlWriterSettings ws = new XmlWriterSettings();
             //ws.Indent = true;
             //XmlWriter writer = XmlWriter.Create(file, ws);
@@ -65,7 +80,7 @@ static class XMLTools
         }
     }
 
-    public static List<T?> LoadListFromXMLSerializer<T>(string entity)
+    public static List<T?> LoadListFromXMLSerializer<T>(string entity) where T : struct
     {
         string filePath = $"{s_dir + entity}.xml";
         try
@@ -74,7 +89,6 @@ static class XMLTools
             using FileStream file = new(filePath, FileMode.Open);
             XmlSerializer x = new(typeof(List<T?>));
             return x.Deserialize(file) as List<T?> ?? new();
-
         }
         catch (Exception ex)
         {
