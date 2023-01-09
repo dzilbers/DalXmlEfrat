@@ -4,9 +4,10 @@ Test_Lecturer_XmlSerializer();
 static void Test_Student_LinqToXml()
 {
     DalApi.IStudent dal = new Dal.Student();
-    try
-    {
-        for (int i = 10; i > 0; --i)
+
+    for (int i = 10; i > 0; --i)
+        try
+        {
             dal.Add(new()
             {
                 ID = i,
@@ -16,30 +17,40 @@ static void Test_Student_LinqToXml()
                 BirthDate = DateTime.ParseExact("12.03.85", "dd.MM.yy", null),
                 Grade = 100
             });
+        }
+        catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
 
-        Console.WriteLine(dal.GetById(1));
-        dal.Delete(5);
+    try { Console.WriteLine(dal.GetById(1)); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
+
+    try { dal.Delete(5); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
+
+    try
+    {
         dal.Update(new DO.Student
         {
             ID = 3,
             FirstName = "FNNew",
-            //LastName = "LNNew",
-            //StudentStatus = DO.StudentStatus.FINISHED,
+            //LastName = "LNNew", // empty (null) field
+            //StudentStatus = DO.StudentStatus.FINISHED, // empty (null) field
             BirthDate = DateTime.ParseExact("15.05.55", "dd.MM.yy", null),
             Grade = 100
         });
-
-        foreach (var item in dal.GetAll()) Console.WriteLine(item);
     }
-    catch (Exception ex) { Console.WriteLine(ex.Message); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
+
+    try { foreach (var item in dal.GetAll()) Console.WriteLine(item); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
 }
 
 static void Test_Lecturer_XmlSerializer()
 {
     DalApi.ILecturer dal = new Dal.Lecturer();
-    try
-    {
-        for (int i = 10; i > 0; --i)
+
+    for (int i = 10; i > 0; --i)
+        try
+        {
             dal.Add(new()
             {
                 ID = i,
@@ -48,9 +59,17 @@ static void Test_Lecturer_XmlSerializer()
                 LecturerStatus = DO.LecturerStatus.SABBATICAL,
                 SeniorStuff = true
             });
+        }
+        catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
 
-        Console.WriteLine(dal.GetById(1));
-        dal.Delete(5);
+    try { Console.WriteLine(dal.GetById(1)); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
+
+    try { dal.Delete(5); }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
+
+    try
+    {
         dal.Update(new DO.Lecturer
         {
             ID = 3,
@@ -59,8 +78,9 @@ static void Test_Lecturer_XmlSerializer()
             //LecturerStatus = DO.LecturerStatus.ADJUNCT,
             SeniorStuff = false
         });
-
-        foreach (var item in dal.GetAll()) Console.WriteLine(item);
     }
+    catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
+
+    try { foreach (var item in dal.GetAll()) Console.WriteLine(item); }
     catch (Exception ex) { Console.WriteLine($"{ex.Message}\n{ex.InnerException}"); }
 }
